@@ -55,38 +55,6 @@ def soft_dice_loss(prediction, soft_ground_truth, num_class, weight_map=None):
     return dice_score
 
 
-def val_dice_fetus(prediction, soft_ground_truth, num_class):
-    # predict = prediction.permute(0, 2, 3, 1)
-    pred = prediction.contiguous().view(-1, num_class)
-    # pred = F.softmax(pred, dim=1)
-    ground = soft_ground_truth.view(-1, num_class)
-    ref_vol = torch.sum(ground, 0)
-    intersect = torch.sum(ground * pred, 0)
-    seg_vol = torch.sum(pred, 0)
-    dice_score = 2.0 * intersect / (ref_vol + seg_vol + 1.0)
-    dice_mean_score = torch.mean(dice_score)
-    placenta_dice = dice_score[1]
-    brain_dice = dice_score[2]
-
-    return placenta_dice, brain_dice
-
-
-def Intersection_over_Union_fetus(prediction, soft_ground_truth, num_class):
-    # predict = prediction.permute(0, 2, 3, 1)
-    pred = prediction.contiguous().view(-1, num_class)
-    # pred = F.softmax(pred, dim=1)
-    ground = soft_ground_truth.view(-1, num_class)
-    ref_vol = torch.sum(ground, 0)
-    intersect = torch.sum(ground * pred, 0)
-    seg_vol = torch.sum(pred, 0)
-    iou_score = intersect / (ref_vol + seg_vol - intersect + 1.0)
-    dice_mean_score = torch.mean(iou_score)
-    placenta_iou = iou_score[1]
-    brain_iou = iou_score[2]
-
-    return placenta_iou, brain_iou
-
-
 def val_dice_isic(prediction, soft_ground_truth, num_class):
     # predict = prediction.permute(0, 2, 3, 1)
     pred = prediction.contiguous().view(-1, num_class)
